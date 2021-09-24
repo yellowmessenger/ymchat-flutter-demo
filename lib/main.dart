@@ -40,17 +40,26 @@ class _MyAppState extends State<MyApp> {
   }
 
   void initilizeChatbot() {
+    // Initializing chatbot id to work with in the SDK
     YmChat.setBotId("x1597301712805");
-    YmChat.setPayload({"integration": "Flutter"});
-    YmChat.showCloseButton(true);
-    YmChat.setEnableHistory(true);
 
+    // Adding payload to communicate with chatbot
+    YmChat.setPayload({"integration": "Flutter"});
+
+    // Enabling UI close button
+    YmChat.showCloseButton(true);
+
+    // Enabling voice input
+    YmChat.setEnableSpeech(true);
+
+    // Listening to bot events
     EventChannel _ymEventChannel = const EventChannel("YMChatEvent");
     _ymEventChannel.receiveBroadcastStream().listen((event) {
       Map ymEvent = event;
       log("${ymEvent['code']} : ${ymEvent['data']}");
     });
 
+    // Listening to close bot events
     EventChannel _ymCloseEventChannel = const EventChannel("YMBotCloseEvent");
     _ymCloseEventChannel.receiveBroadcastStream().listen((event) {
       bool ymCloseEvent = event;
