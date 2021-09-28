@@ -16,10 +16,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String deviceToken = "";
+  String apiKey =
+      "a6aee4bc2885b10c2c1b02b96080263057438d2673a5512c6b64da2a3f818ee7";
+  String botId = "x1597301712805";
+
   @override
   void initState() {
     super.initState();
-    initilizeChatbot();
+    initializeChatbot();
   }
 
   @override
@@ -28,6 +33,19 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('YmChat Demo'),
+        ),
+        body: Center(
+          child: TextButton(
+            onPressed: () {
+              // unlink device token
+              YmChat.unLinkDeviceToken(botId, apiKey, deviceToken, () {
+                log("Device token unlinked successfully");
+              }, (failureMessage) {
+                log(failureMessage);
+              });
+            },
+            child: const Text("UnLink device token"),
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -39,9 +57,9 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void initilizeChatbot() {
+  void initializeChatbot() {
     // Initializing chatbot id to work with in the SDK
-    YmChat.setBotId("x1597301712805");
+    YmChat.setBotId(botId);
 
     // Adding payload to communicate with chatbot
     YmChat.setPayload({"integration": "Flutter"});
