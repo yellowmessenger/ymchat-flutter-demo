@@ -19,7 +19,7 @@ class _MyAppState extends State<MyApp> {
   String deviceToken = "";
   String apiKey =
       "a6aee4bc2885b10c2c1b02b96080263057438d2673a5512c6b64da2a3f818ee7";
-  String botId = "x1597301712805";
+  String botId = "x1608615889375";
 
   @override
   void initState() {
@@ -69,6 +69,8 @@ class _MyAppState extends State<MyApp> {
 
     // Enabling voice input
     YmChat.setEnableSpeech(true);
+    // using v2 widget
+    YmChat.setVersion(2);
 
     // Listening to bot events
     EventChannel _ymEventChannel = const EventChannel("YMChatEvent");
