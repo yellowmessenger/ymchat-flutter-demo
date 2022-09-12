@@ -62,6 +62,7 @@ class _MyAppState extends State<MyApp> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
+            // Internet connectivity must be validated before launching bot
             if (await hasNetwork()) {
               YmChat.startChatbot();
             } else {
