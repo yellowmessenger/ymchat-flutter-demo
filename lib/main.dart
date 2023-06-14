@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:ymchat_flutter/ymchat_flutter.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -18,9 +18,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String deviceToken = "";
-  String apiKey =
-      "a6aee4bc2885b10c2c1b02b96080263057438d2673a5512c6b64da2a3f818ee7";
-  String botId = "x1608615889375";
+  String apiKey = "Rs3tSLQF9tWS9lvZFOUyjPBwoiu4naOb7mueI44d";
+  String botId = "x1645602443989";
   final _inputKey = GlobalKey<FormState>();
   final _messangerKey = GlobalKey<ScaffoldMessengerState>();
 
@@ -48,18 +47,51 @@ class _MyAppState extends State<MyApp> {
           title: const Text('YmChat Demo'),
         ),
         body: Center(
-          child: TextButton(
-            onPressed: () {
-              // unlink device token
-              YmChat.unLinkDeviceToken(botId, apiKey, deviceToken, () {
-                log("Device token unlinked successfully");
-              }, (failureMessage) {
-                log(failureMessage);
-              });
-            },
-            child: const Text("UnLink device token"),
-          ),
-        ),
+            child: Column(
+          children: [
+            TextButton(
+              onPressed: () {
+                YmChat.unLinkDeviceToken(botId, apiKey, "deviceToken", () {
+                  log("Unlink Device Token: success");
+                }, (p0) {
+                  log('Unlink Device token failed: $p0');
+                });
+              },
+              child: const Text("Unlink device token"),
+            ),
+            TextButton(
+              onPressed: () {
+                log("1");
+                YmChat.setBotId(botId);
+                log("2");
+                YmChat.setAuthenticationToken("authToken");
+                log("3");
+                YmChat.setDeviceToken("deviceToken");
+                log("4");
+                // unlink device token
+                YmChat.registerDevice(apiKey, (p0) {
+                  log("register device: success");
+                }, (failureMessage) {
+                  log("register device failed: $failureMessage");
+                });
+              },
+              child: const Text("Register Device"),
+            ),
+            TextButton(
+              onPressed: () {
+                YmChat.setBotId(botId);
+                YmChat.setAuthenticationToken("authToken");
+
+                YmChat.getUnreadMessages((count) {
+                  log("Unread Message Count: $count");
+                }, (failureMessage) {
+                  log(failureMessage);
+                });
+              },
+              child: const Text("Unread Message Count"),
+            ),
+          ],
+        )),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             // Internet connectivity must be validated before launching bot
@@ -79,6 +111,31 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  void showAlertDialog(String description) {
+    // set up the button
+    Widget okButton = TextButton(
+      onPressed: () => Navigator.pop(context, 'OK'),
+      child: const Text('OK'),
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Event"),
+      content: Text(description),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   void initializeChatbot() {
     // Initializing chatbot id to work with in the SDK
     YmChat.setBotId(botId);
@@ -94,18 +151,23 @@ class _MyAppState extends State<MyApp> {
     // using v2 widget
     YmChat.setVersion(2);
 
+    YmChat.useLiteVersion(false);
+
     // Listening to bot events
     EventChannel _ymEventChannel = const EventChannel("YMChatEvent");
     _ymEventChannel.receiveBroadcastStream().listen((event) {
       Map ymEvent = event;
-      log("${ymEvent['code']} : ${ymEvent['data']}");
+      log("Flutter App: ${ymEvent['code']} : ${ymEvent['data']}");
+      // showAlertDialog("${ymEvent['code']} : ${ymEvent['data']}");
+      // YmChat.closeBot();
     });
 
     // Listening to close bot events
     EventChannel _ymCloseEventChannel = const EventChannel("YMBotCloseEvent");
     _ymCloseEventChannel.receiveBroadcastStream().listen((event) {
-      bool ymCloseEvent = event;
+      // bool ymCloseEvent = event;
       log(event.toString());
+      showAlertDialog("Bot Closed");
     });
   }
 }
