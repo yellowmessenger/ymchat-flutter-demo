@@ -18,7 +18,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String deviceToken = "";
-  String apiKey = "Rs3tSLQF9tWS9lvZFOUyjPBwoiu4naOb7mueI44d";
+  String apiKey = "";
   String botId = "x1645602443989";
   final _inputKey = GlobalKey<FormState>();
   final _messangerKey = GlobalKey<ScaffoldMessengerState>();
@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> {
           children: [
             TextButton(
               onPressed: () {
-                YmChat.unLinkDeviceToken(botId, apiKey, "deviceToken", () {
+                YmChat.unLinkDeviceToken(apiKey, () {
                   log("Unlink Device Token: success");
                 }, (p0) {
                   log('Unlink Device token failed: $p0');
@@ -153,9 +153,19 @@ class _MyAppState extends State<MyApp> {
 
     YmChat.useLiteVersion(false);
 
+    YmChat.setThemeBotName('Demo Bot Name');
+    YmChat.setThemeBotDescription('Demo Bot Description');
+    YmChat.setThemePrimaryColor('#ff0000');
+    YmChat.setThemeSecondaryColor('#00ff00');
+    YmChat.setThemeBotBubbleBackgroundColor('#0000ff');
+    YmChat.setThemeBotIcon(
+        'https://cdn.yellowmessenger.com/XJFcMhLpN6L91684914460598.png');
+    YmChat.setThemeBotClickIcon(
+        'https://cdn.yellowmessenger.com/XJFcMhLpN6L91684914460598.png');
+
     // Listening to bot events
     EventChannel _ymEventChannel = const EventChannel("YMChatEvent");
-    _ymEventChannel.receiveBroadcastStream().listen((event) {
+    _ymEventChannel.receiveBroadcastStream().listen((event) async {
       Map ymEvent = event;
       log("Flutter App: ${ymEvent['code']} : ${ymEvent['data']}");
       // showAlertDialog("${ymEvent['code']} : ${ymEvent['data']}");
