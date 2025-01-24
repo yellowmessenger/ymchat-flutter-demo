@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.yellow.ai.ymchat_flutter_demo">
+    xmlns:tools="http://schemas.android.com/tools">
    <application
         android:label="ymchat_flutter_demo"
         android:icon="@mipmap/ic_launcher">
